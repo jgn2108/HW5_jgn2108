@@ -13,6 +13,7 @@ output: github_document
 #library(tidyverse)
 #library(skimr)
 #library(dplyr)
+#library(broom)
 ```
 
 #Read in data
@@ -67,4 +68,62 @@ summary_data <- homicide_data_df %>%
 # Print the summary data
 print(summary_data)
 ```
+This new variable allows me to clearly see the total homicides vs. unsolved homicides by city/state.
 
+#Now use the prop.test and broom::tidy functions for the subset of data related to Baltimore, MD
+```{r}
+# Subset data for Baltimore, MD
+baltimore_data <- filter(homicide_data_df, city == "Baltimore" & state == "MD")
+
+# Use prop.test to estimate the proportion of unsolved homicides
+prop_test_result <- prop.test(
+  sum(baltimore_data$disposition %in% c("Closed without arrest", "Open/No arrest")),
+  nrow(baltimore_data)
+)
+
+# Now, apply broom::tidy to the prop.test result and print tidy results
+tidy_result <- tidy(prop_test_result)
+print(tidy_result)
+
+# Extract estimated proportion and CIs
+estimated_proportion <- tidy_result$estimate[1] #but i'm having trouble getting CIs
+
+# Check if conf.int is available 
+if (!is.null(tidy_result$conf.int)) {
+  conf_int <- tidy_result$conf.int
+  cat("Confidence Intervals:", conf_int[1], "to", conf_int[2], "\n")
+} else {
+  cat("Confidence Intervals: Not available\n")
+}
+
+# Print the estimated proportion
+cat("Estimated Proportion of Unsolved Homicides:", estimated_proportion, "\n")
+```
+Estimated Proportion of Unsolved Homicides: 0.6455607 
+Confidence Intervals: Not available
+
+#trouble shooting why I can't get a CI
+```{r}
+#Make Balitimore data into a normal df and then see if there is missing data
+baltimore_data_df <- as.data.frame(baltimore_data)
+missing_rows <- complete.cases(baltimore_data_df)
+
+# Subset the data to show only rows with missing observations
+rows_with_missing <- baltimore_data_df[!missing_rows, ]
+
+# Display rows with missing observations
+print(rows_with_missing) #No missing data
+```
+
+#still trouble shooting why I can't get CIs
+```{r}
+#look into structure of tidy results
+str(tidy_result) #AHHHH, the CIs are conf_int_low and conf_int_high
+
+# Extract CIs and print
+conf_int_low <- tidy_result$conf.low
+conf_int_high <- tidy_result$conf.high
+cat("Confidence Intervals:", conf_int_low, "to", conf_int_high, "\n")
+
+```
+Confidence Intervals: 0.6275625 to 0.6631599 
