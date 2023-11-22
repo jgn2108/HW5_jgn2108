@@ -16,7 +16,7 @@ output: github_document
 #library(broom)
 #library(purrr)
 #library(broom)
-
+#library(ggplot2)
 ```
 
 #Read in data
@@ -101,6 +101,7 @@ if (!is.null(tidy_result$conf.int)) {
 
 # Print the estimated proportion
 cat("Estimated Proportion of Unsolved Homicides:", estimated_proportion, "\n")
+
 ```
 Estimated Proportion of Unsolved Homicides: 0.6455607 
 Confidence Intervals: Not available
@@ -131,7 +132,7 @@ cat("Confidence Intervals:", conf_int_low, "to", conf_int_high, "\n")
 ```
 Confidence Intervals: 0.6275625 to 0.6631599
 
-#Now, I have to begin interating my commands uisng the prop.test function
+#Now, I have to begin interating my commands using the prop.test function
 ```{r}
 # Create a tidy pipeline
 all_cities_results <- homicide_data_df %>%
@@ -156,6 +157,11 @@ all_cities_results <- homicide_data_df %>%
 
 # Print the proportions of unsolved murders and CIs for all cities 
 print(all_cities_results)
+
+```
+
+#Now I have to use ggplot2 and geom_errorbar to create a plot that shows the estimated proportions and CIs for each city
+```{r}
 
 ```
 
