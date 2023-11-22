@@ -224,8 +224,11 @@ combined_data.1 <- tibble(file = csv_files) %>%
 
 # Extract subject ID and arm from the file name
 combined_data.1 <- combined_data.1 %>%
-  mutate(subject_id = str_extract(file, "\\d+"),  # Extract numeric part from file name
-         arm = str_extract(file, "(?<=_)[^_]+(?=\\.csv)"))  # Extract text between "_" and ".csv"
+  mutate(
+    subject_id = str_extract(file, "(?<=con_|exp_)\\d+"),  # Extract numeric part immediately following "con" or "exp"
+    arm = str_extract(file, "(con|exp)")  # Extract "con" or "exp" from file name
+  )
+
 
 # View the resulting dataframe
 print(combined_data.1)
