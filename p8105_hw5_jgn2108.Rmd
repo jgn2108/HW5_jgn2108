@@ -5,4 +5,39 @@ date: "`r Sys.Date()`"
 output: github_document
 ---
 
-#Problem 0
+#Problem 1: Washington Post data in a github repository
+```{r}
+#install.packages("readr")
+#install.packages("skimr")
+#library(readr)
+#library(tidyverse)
+#library(skimr)
+```
+
+#Read in data
+```{r}
+url <- "https://raw.githubusercontent.com/washingtonpost/data-homicides/master/homicide-data.csv"
+
+# Read the CSV file into a data frame
+homicide_data <- read_csv(url)
+
+# View the first few rows of the data
+head(homicide_data)
+```
+#Data cleaning (using skimr)
+```{r}
+# Use the skim() function directly from skimr without loading the whole package
+skim_summary <- skimr::skim(homicide_data)
+
+# Print the summary
+print(skim_summary)
+
+```
+#Convert tibble into a standard df
+```{r}
+homicide_data_df <- as.data.frame(homicide_data)
+str(homicide_data_df)
+```
+This data represents the names and demographics of homicide victims across the U.S., as well as the date the homicide was reported, the location (latitude/longitude) the victims were found, and the disposition of the case (i.e., whether an arrest was made or not).
+
+
