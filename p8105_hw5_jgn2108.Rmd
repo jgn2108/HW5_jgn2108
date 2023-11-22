@@ -12,6 +12,7 @@ output: github_document
 #library(readr)
 #library(tidyverse)
 #library(skimr)
+#library(dplyr)
 ```
 
 #Read in data
@@ -40,4 +41,30 @@ str(homicide_data_df)
 ```
 This data represents the names and demographics of homicide victims across the U.S., as well as the date the homicide was reported, the location (latitude/longitude) the victims were found, and the disposition of the case (i.e., whether an arrest was made or not).
 
+#Reformat reported_date
+```{r}
+# Convert numeric date to Date object
+homicide_data_df$reported_date <- as.Date(as.character(homicide_data_df$reported_date), format = "%Y%m%d")
+
+# Format the date as MM/DD/YYYY
+homicide_data_df$reported_date <- format(homicide_data_df$reported_date, "%m/%d/%Y")
+
+```
+
+#Create a new variable: city_state
+```{r}
+# Create city_state variable
+homicide_data_df <- mutate(homicide_data_df, city_state = paste(city, state, sep = ", "))
+
+# Summarize data
+summary_data <- homicide_data_df %>%
+  group_by(city_state) %>%
+  summarize(
+    total_homicides = n(),
+    unsolved_homicides = sum(disposition %in% c("Closed without arrest", "Open/No arrest"))
+  )
+
+# Print the summary data
+print(summary_data)
+```
 
