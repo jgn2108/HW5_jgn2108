@@ -215,3 +215,25 @@ print(combined_data)
 
 ```
 
+#Now use the map function from the purrr package to iterate over the file names and read in data for each subject (RegEx)
+```{r}
+# Read in data for each subject and save it as a new variable
+combined_data.1 <- tibble(file = csv_files) %>%
+  mutate(data = map(file, read_csv)) %>%
+  unnest(data)
+
+# Extract subject ID and arm from the file name
+combined_data.1 <- combined_data.1 %>%
+  mutate(subject_id = str_extract(file, "\\d+"),  # Extract numeric part from file name
+         arm = str_extract(file, "(?<=_)[^_]+(?=\\.csv)"))  # Extract text between "_" and ".csv"
+
+# View the resulting dataframe
+print(combined_data.1)
+```
+
+#Make them into a traditional df (from a tibble because tibbles look too visiually complex for me)
+```{r}
+combined_data1_df <- as.data.frame(combined_data.1)
+str(combined_data1_df)
+```
+
