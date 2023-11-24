@@ -295,3 +295,46 @@ spaghetti_plot <- ggplot(tidy_combined_data_df, aes(x = week, y = observation, c
 print(spaghetti_plot)
 ```
 This spagetti plot demonstrates that the subjects in the control arm had higher numeric observation values compared to subjects in the control arm.
+
+##Problem 3: statistical test (one sample t test)
+#setting the first design elements
+```{r}
+#library(broom)
+
+# Set seed 
+set.seed(42)
+
+# Set design elements
+n <- 30
+sigma <- 5
+mu <- 0
+alpha <- 0.05
+num_datasets <- 5000
+
+# Initialize vectors to store results
+mu_hat_vector <- numeric(num_datasets)
+p_value_vector <- numeric(num_datasets)
+
+# Simulation loop
+for (i in 1:num_datasets) {
+  # Generate data
+  x <- rnorm(n, mean = mu, sd = sigma)
+  
+  # Perform t-test and tidy the results
+  t_test_result <- tidy(t.test(x))
+  
+  # Extract mu_hat and p-value
+  mu_hat <- t_test_result$estimate
+  p_value <- t_test_result$p.value
+  
+  # Save results
+  mu_hat_vector[i] <- mu_hat
+  p_value_vector[i] <- p_value
+}
+
+# Display the first few values
+head(data.frame(mu_hat = mu_hat_vector, p_value = p_value_vector))
+
+```
+
+
