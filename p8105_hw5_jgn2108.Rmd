@@ -404,11 +404,30 @@ plot1 <- ggplot(avg_mu_hat, aes(x = true_mu, y = mu_hat)) +
        y = "Average Estimate of μ̂") +
   theme_minimal()
 
-# Display the first plot
 print(plot1)
-
-
 
 ```
 
+#Overlaying the average estimate of mu hat but only in samples in which the null was rejected
+```{r}
+# Filter samples where null was rejected
+rejected_samples <- subset(results_df, p_value < alpha)
+
+# Calculate the average estimate of mu hat for rejected samples 
+avg_mu_hat_rejected <- aggregate(mu_hat ~ true_mu, data = rejected_samples, mean, na.rm = TRUE)
+
+# Create the second plot overlaying the average estimate of mu hat for rejected samples 
+plot2 <- ggplot() +
+  geom_point(data = avg_mu_hat, aes(x = true_mu, y = mu_hat), color = "blue") +
+  geom_line(data = avg_mu_hat, aes(x = true_mu, y = mu_hat), color = "blue") +
+  geom_point(data = avg_mu_hat_rejected, aes(x = true_mu, y = mu_hat), color = "red", size = 2) +
+  geom_line(data = avg_mu_hat_rejected, aes(x = true_mu, y = mu_hat), color = "red") +
+  labs(title = "Average Estimate of μ̂ vs. True Value of μ with Overlay for Rejected Samples",
+       x = "True Value of μ",
+       y = "Average Estimate of μ̂") +
+  theme_minimal()
+
+print(plot2)
+
+```
 
