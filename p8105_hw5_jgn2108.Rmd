@@ -17,6 +17,8 @@ output: github_document
 #library(purrr)
 #library(broom)
 #library(ggplot2)
+#library(tidyr)
+#library(stringr)
 ```
 
 #Read in data
@@ -234,16 +236,35 @@ combined_data.1 <- combined_data.1 %>%
 print(combined_data.1)
 ```
 
-#Now make it tidy
+#Now make it more tidy, attempting to use the pivot_longer function
 ```{r}
+# Tidy the columns
+tidy_combined_data <- combined_data.1 %>%
+  pivot_longer(cols = starts_with("week_"), 
+               names_to = "week",
+               values_to = "observation")
+
+# View the resulting tidy dataframe
+print(tidy_combined_data)
+```
+
+#Now make file names more tidy
+```{r}
+# Extract control arm and subject ID from file names
+tidy_combined_data <- tidy_combined_data %>%
+  mutate(file_name = basename(file),
+         control_arm = str_extract(file_name, "(con|exp)"),
+         subject_id = str_extract(file_name, "\\d+"))
+
+# View the resulting dataframe
+print(tidy_combined_data)
 
 ```
 
 
-
 #Make them into a traditional df (from a tibble because tibbles look too visiually complex for me)
 ```{r}
-combined_data1_df <- as.data.frame(combined_data.1)
-str(combined_data1_df)
+tidy_combined_data_df <- as.data.frame(tidy_combined_data)
+str(tidy_combined_data_df)
 ```
 
