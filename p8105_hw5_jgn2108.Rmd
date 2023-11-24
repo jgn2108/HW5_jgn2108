@@ -346,19 +346,23 @@ true_mu_values <- c(0, 1, 2, 3, 4, 5, 6)
 results_df <- data.frame(true_mu = true_mu_values,
                          power = numeric(length(true_mu_values)))
 
+# Initialize vectors to store results
+mu_hat_vector <- numeric(num_datasets)
+p_value_vector <- numeric(num_datasets)
+true_mu_vector <- numeric(num_datasets)
+
 # Simulation loop (for loops!!!)
 for (i in seq_along(true_mu_values)) {
   mu <- true_mu_values[i]
-  mu_hat_vector <- numeric(num_datasets)
-  p_value_vector <- numeric(num_datasets)
-  
+
   for (j in 1:num_datasets) {
     x <- rnorm(n, mean = mu, sd = sigma) # Generate data
     t_test_result <- tidy(t.test(x)) # Perform t-test and tidy the results
     mu_hat <- t_test_result$estimate # Extract mu_hat 
     p_value <- t_test_result$p.value # Extract p-value
     mu_hat_vector[j] <- mu_hat #save results (mu_hat) in vector 
-    p_value_vector[j] <- p_value #save results (p_value) in vector 
+    p_value_vector[j] <- p_value #save results (p_value) in vector
+    true_mu_vector[j] <- mu #save results (true_mu) in vector
   }
   
   # Calculate power
@@ -381,5 +385,30 @@ ggplot(results_df, aes(x = true_mu, y = power)) +
 ```
 The null was rejected 100% of the time when the mu was greater than or equal to 4
 
+#Plotting the Average Estimate of mu_hat
+```{r}
+#combine results
+results_df <- data.frame(true_mu = rep(true_mu_values, each = num_datasets),
+                         mu_hat = mu_hat_vector,
+                         p_value = p_value_vector)
+
+# Calculate the average estimate of mu hat for each true value of mu
+avg_mu_hat <- aggregate(mu_hat ~ true_mu, data = results_df, mean, na.rm = TRUE)
+
+# Create the first plot
+plot1 <- ggplot(avg_mu_hat, aes(x = true_mu, y = mu_hat)) +
+  geom_point(color = "blue") +
+  geom_line(color = "blue") +
+  labs(title = "Average Estimate of μ̂ vs. True Value of μ",
+       x = "True Value of μ",
+       y = "Average Estimate of μ̂") +
+  theme_minimal()
+
+# Display the first plot
+print(plot1)
+
+
+
+```
 
 
