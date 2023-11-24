@@ -246,14 +246,22 @@ tidy_combined_data <- combined_data.1 %>%
 
 # View the resulting tidy dataframe
 print(tidy_combined_data)
+
 ```
 
 #Now make file names more tidy
 ```{r}
+tidy_combined_data <- tidy_combined_data %>%
+  mutate(
+    week = str_extract(week, "\\d+")  # Extract numeric part from "week" column
+  )
+print(tidy_combined_data)
+```
+
+```{r}
 # Extract control arm and subject ID from file names
 tidy_combined_data <- tidy_combined_data %>%
   mutate(file_name = basename(file),
-         control_arm = str_extract(file_name, "(con|exp)"),
          subject_id = str_extract(file_name, "\\d+"))
 
 # View the resulting dataframe
