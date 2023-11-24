@@ -285,7 +285,7 @@ str(tidy_combined_data_df)
 #Now attempt to make a spagetti plot (using ggplot2)
 ```{r}
 # Create a spaghetti plot
-spaghetti_plot <- ggplot(tidy_combined_data_df, aes(x = week, y = observation, color = subject_id)) +
+spaghetti_plot <- ggplot(tidy_combined_data_df, aes(x = week, y = observation, color = arm)) +
   geom_line() +
   labs(title = "Spaghetti Plot of Observations Over Time",
        x = "Week",
@@ -294,4 +294,4 @@ spaghetti_plot <- ggplot(tidy_combined_data_df, aes(x = week, y = observation, c
 
 print(spaghetti_plot)
 ```
-
+This spagetti plot demonstrates that the subjects in the control arm had higher numeric observation values compared to subjects in the control arm.
