@@ -234,6 +234,13 @@ combined_data.1 <- combined_data.1 %>%
 print(combined_data.1)
 ```
 
+#Now make it tidy
+```{r}
+
+```
+
+
+
 #Make them into a traditional df (from a tibble because tibbles look too visiually complex for me)
 ```{r}
 combined_data1_df <- as.data.frame(combined_data.1)
