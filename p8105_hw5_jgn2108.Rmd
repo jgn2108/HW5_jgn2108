@@ -430,4 +430,4 @@ plot2 <- ggplot() +
 print(plot2)
 
 ```
-
+Ok, the two plots of average estimates of mu_hat against the true value of mu are two identical straught lines at an average estimates of mu_hat level of approximatley 6.020. This implies that the average estimate of mu_hat cross tests for which the null is rejected is approximately equal to the true value of mu.The alignment between the true value of mu and the average estimate of mu_hat might suggest that the t-tests are correctly capturing the true population mean when the null hypothesis is rejected. This is assuming the plots I generated are correct.
