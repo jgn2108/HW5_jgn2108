@@ -323,11 +323,10 @@ for (i in 1:num_datasets) {
   # Perform t-test and tidy the results
   t_test_result <- tidy(t.test(x))
   
-  # Extract mu_hat and p-value
+  # Extract mu_hat and p-value and save results
   mu_hat <- t_test_result$estimate
   p_value <- t_test_result$p.value
-  
-  # Save results
+
   mu_hat_vector[i] <- mu_hat
   p_value_vector[i] <- p_value
 }
