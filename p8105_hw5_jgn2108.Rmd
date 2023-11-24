@@ -249,7 +249,7 @@ print(tidy_combined_data)
 
 ```
 
-#Now make file names more tidy
+#Now make rows more tidy
 ```{r}
 tidy_combined_data <- tidy_combined_data %>%
   mutate(
@@ -257,14 +257,13 @@ tidy_combined_data <- tidy_combined_data %>%
   )
 print(tidy_combined_data)
 ```
-
+#Make column names more tidy, specifically the file name
 ```{r}
 # Extract control arm and subject ID from file names
 tidy_combined_data <- tidy_combined_data %>%
-  mutate(file_name = basename(file),
-         subject_id = str_extract(file_name, "\\d+"))
-
-# View the resulting dataframe
+  mutate(
+    file = str_replace(file, "/Users/jgn/Desktop/P8105/HW5/data/", "")
+  )
 print(tidy_combined_data)
 
 ```
