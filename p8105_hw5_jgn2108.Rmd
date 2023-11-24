@@ -274,4 +274,24 @@ print(tidy_combined_data)
 tidy_combined_data_df <- as.data.frame(tidy_combined_data)
 str(tidy_combined_data_df)
 ```
+#clean up rows more
+```{r}
+tidy_combined_data_df$week <- as.numeric(tidy_combined_data_df$week)
+tidy_combined_data_df$subject_id <- as.numeric(tidy_combined_data_df$subject_id)
+tidy_combined_data_df$arm <- factor(tidy_combined_data_df$arm, levels = c("con", "exp"), labels = c(1, 2))
+str(tidy_combined_data_df)
+```
+
+#Now attempt to make a spagetti plot (using ggplot2)
+```{r}
+# Create a spaghetti plot
+spaghetti_plot <- ggplot(tidy_combined_data_df, aes(x = week, y = observation, color = subject_id)) +
+  geom_line() +
+  labs(title = "Spaghetti Plot of Observations Over Time",
+       x = "Week",
+       y = "Observation") +
+  theme_minimal()
+
+print(spaghetti_plot)
+```
 
