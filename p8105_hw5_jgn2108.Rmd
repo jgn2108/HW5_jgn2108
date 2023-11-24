@@ -317,23 +317,69 @@ p_value_vector <- numeric(num_datasets)
 
 # Simulation loop
 for (i in 1:num_datasets) {
-  # Generate data
-  x <- rnorm(n, mean = mu, sd = sigma)
-  
-  # Perform t-test and tidy the results
-  t_test_result <- tidy(t.test(x))
-  
-  # Extract mu_hat and p-value and save results
-  mu_hat <- t_test_result$estimate
-  p_value <- t_test_result$p.value
-
-  mu_hat_vector[i] <- mu_hat
-  p_value_vector[i] <- p_value
+  x <- rnorm(n, mean = mu, sd = sigma) # Generate data
+  t_test_result <- tidy(t.test(x)) # Perform t-test and tidy the results
+  mu_hat <- t_test_result$estimate # Extract mu_hat
+  p_value <- t_test_result$p.value # Extract p-value
+  mu_hat_vector[i] <- mu_hat #save results (mu_hat) in vector 
+  p_value_vector[i] <- p_value #save results (p_value) in vector 
 }
 
 # Display the first few values
 head(data.frame(mu_hat = mu_hat_vector, p_value = p_value_vector))
 
 ```
+#Now iterate the above across different values of mu:1,2,3,4,5,6
+```{r}
+set.seed(42)
+
+# Set design elements
+n <- 30
+sigma <- 5
+alpha <- 0.05
+num_datasets <- 5000
+
+# Values of mu to test
+true_mu_values <- c(0, 1, 2, 3, 4, 5, 6)
+
+# Initialize a data frame to store results
+results_df <- data.frame(true_mu = true_mu_values,
+                         power = numeric(length(true_mu_values)))
+
+# Simulation loop (for loops!!!)
+for (i in seq_along(true_mu_values)) {
+  mu <- true_mu_values[i]
+  mu_hat_vector <- numeric(num_datasets)
+  p_value_vector <- numeric(num_datasets)
+  
+  for (j in 1:num_datasets) {
+    x <- rnorm(n, mean = mu, sd = sigma) # Generate data
+    t_test_result <- tidy(t.test(x)) # Perform t-test and tidy the results
+    mu_hat <- t_test_result$estimate # Extract mu_hat 
+    p_value <- t_test_result$p.value # Extract p-value
+    mu_hat_vector[j] <- mu_hat #save results (mu_hat) in vector 
+    p_value_vector[j] <- p_value #save results (p_value) in vector 
+  }
+  
+  # Calculate power
+  power <- mean(p_value_vector < alpha)
+  
+  # Save power in the results data frame
+  results_df$power[i] <- power
+}
+```
+
+#Now make a plot showing proportion of times the null was rejected (the power of the test) on the y axis and the true value of mu on the x axis
+```{r}
+# Create a plot
+ggplot(results_df, aes(x = true_mu, y = power)) +
+  geom_line() +
+  labs(title = "Power vs. True Value of μ",
+       x = "True Value of μ",
+       y = "Proportion of Rejected Null Hypotheses") +
+  theme_minimal()
+```
+The null was rejected 100% of the time when the mu was greater than or equal to 4
+
 
 
